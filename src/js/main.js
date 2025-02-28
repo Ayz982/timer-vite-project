@@ -1,15 +1,11 @@
-setTimeout(() => {
-    console.log('Hello, world!');
-}, 3000);
-
 const timer = document.getElementById('timer');
 const startButton = document.getElementById('start-button');
 const stopButton = document.getElementById('stop-button');
 const warningMessage = document.getElementById('warning-message');
 
-let seconds = 0;
+let seconds = localStorage.getItem('seconds') ? parseInt(localStorage.getItem('seconds')) : 0;
 let intervalId = null;
-let isRunning = false; 
+let isRunning = false;
 
 function formatTime(sec) {
     let hours = Math.floor(sec / 3600);
@@ -18,11 +14,14 @@ function formatTime(sec) {
     return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 }
 
+timer.textContent = formatTime(seconds);
+
 function startTimer() {
-    if (!isRunning) { 
+    if (!isRunning) {
         isRunning = true;
         intervalId = setInterval(() => {
             seconds++;
+            localStorage.setItem('seconds', seconds); 
             timer.textContent = formatTime(seconds);
         }, 1000);
     } else {
@@ -33,11 +32,12 @@ function startTimer() {
 }
 
 function stopTimer() {
-    if (isRunning) { 
+    if (isRunning) {
         clearInterval(intervalId);
         isRunning = false;
-    } else { 
+    } else {
         seconds = 0;
+        localStorage.setItem('seconds', seconds);
         timer.textContent = formatTime(seconds);
     }
 }
